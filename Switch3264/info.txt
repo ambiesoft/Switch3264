@@ -1,0 +1,26 @@
+32OS: Always -32 applies
+WOW and 64: Always -64 applies, so 32prog must be run
+
+
+
+
+
+
+
+
+
+Pattern:
+32OS,32Prog,32Arg -> NO rerun
+32OS,32Prog,64Arg -> Error
+32OS,64Prog,32Arg -> Not happen
+32OS,64Prog,64Arg -> Not happen
+
+WowOS,32Prog,32Arg -> NO rerun
+WowOS,32Prog,64Arg -> rerun to 64Prog
+WowOS,64Prog,32Arg -> Not happen
+WowOS,64Prog,64Arg -> Not happen
+
+64OS,32Prog,32Arg
+64OS,32Prog,64Arg
+64OS,64Prog,32Arg
+64OS,64Prog,64Arg
