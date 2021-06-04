@@ -1,8 +1,5 @@
 Debug/
 Release/
-Switch3264.sdf
-Switch3264.v12.suo
-Switch3264/Debug/
-Switch3264/Release/
-zzzDist/Debug/
-zzzDist/Release/
+.vs/
+*.user
+

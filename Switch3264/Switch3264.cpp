@@ -29,6 +29,8 @@
 #pragma comment(lib, "Shlwapi.lib")
 
 #include <string>
+#include <memory>
+#include <functional>
 
 #include "../../lsMisc/CommandLineParser.h"
 #include "../../lsMisc/Is64.h"
@@ -36,7 +38,6 @@
 #include "../../lsMisc/CommandLineString.h"
 #include "../../lsMisc/stdwin32/stdwin32.h"
 #include "../../lsMisc/stdosd/stdosd.h"
-#include "../../lsMisc/stlScopedClear.h"
 #include "../../lsMisc/HighDPI.h"
 
 using namespace std;
@@ -46,6 +47,7 @@ using namespace stdwin32;
 
 #define I18N(s) (s)
 #define APPNAME L"Switch3264"
+#define APPVERSION L"1.0.2"
 #define OPTION_ARGS_TOPASS L"--args-topass"
 
 wstring getErrorMessage(CCommandLineParser& parser)
@@ -58,20 +60,10 @@ wstring getErrorMessage(CCommandLineParser& parser)
 
 	return shown;
 }
-void ErrorExit(const wstring& message, CCommandLineParser& parser)
+void ErrorExit(const wstring& message)
 {
-	wstring shown;
-	if (!message.empty())
-	{
-		shown += message;
-		shown += L"\r\n--------------------------";
-
-		shown += L"\r\n\r\n";
-
-	}
-	shown += getErrorMessage(parser).c_str();
 	MessageBox(NULL,
-		shown.c_str(),
+		message.c_str(),
 		APPNAME,
 		MB_ICONERROR);
 
@@ -109,18 +101,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	Ambiesoft::InitHighDPISupport();
 
-	CCommandLineParser parser(CaseFlags_Default, L"Execute 32bit app or 64 bit app determined by execution environment");
+	CCommandLineParser parser(CaseFlags_Default, 
+		L"Execute 32bit or 64 bit app determined by execution environment",
+		APPNAME);
 
 	wstring exe32, exe64;
 	bool bHelp = false;
+	bool bVersion = false;
 	parser.AddOption(L"-32", 1, &exe32, ArgEncodingFlags_Default, L"Specify 32bit executable");
 	parser.AddOption(L"-64", 1, &exe64, ArgEncodingFlags_Default, L"Specify 64bit executable");
 
 	bool bDirExe = false;
 	parser.AddOption(L"-direxe", 0, &bDirExe);
 
-	vector<wstring> helpoptions{ L"-h", L"-?", L"--help" };
-	parser.AddOptionRange(helpoptions.begin(), helpoptions.end(),
+	parser.AddOptionRange(
+		{ L"-v", L"-V", L"--version" },
+		0,
+		&bVersion,
+		ArgEncodingFlags_Default,
+		L"Show Version");
+
+	parser.AddOptionRange(
+		{ L"-h", L"-?", L"--help", L"/?" },
 		0,
 		&bHelp,
 		ArgEncodingFlags_Default,
@@ -128,17 +130,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	parser.Parse();
 
-	if (bHelp)
+	if (bHelp || bVersion)
 	{
 		MessageBox(NULL,
 			getErrorMessage(parser).c_str(),
-			APPNAME,
+			APPNAME L" v" APPVERSION,
 			MB_ICONINFORMATION);
 		return 0;
 	}
 	if (exe32.empty() || exe64.empty())
 	{
-		ErrorExit(I18N(L"-32 and -64 must be specified."), parser);
+		ErrorExit(I18N(L"-32 and -64 must be specified."));
 	}
 
 	wstring argToProg;
@@ -150,11 +152,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 	else
 	{
-		int argc = 0;
-		wchar_t** argv = CCommandLineString::getCommandLineArg(GetCommandLine(), &argc);
-		STLSOFT_SCOPEDFREE(argv, wchar_t**, CCommandLineString::freeCommandLineArg);
-		wstring exe32t, exe64t;
-		bool bexedirt = false;
 		size_t i;
 		for (i = 1; i < cls.getCount(); ++i)
 		{
