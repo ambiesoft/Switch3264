@@ -6,21 +6,19 @@
     "targets": [
             {
             	"setoutdirforbuild": false,
-        	    "outdir" : "Release\\v120_xp\\Switch3264\\x86\\",
+        	    "outdir" : "Release\\v142\\Switch3264\\x86\\",
                 "platform":"Win32"
             },
             {
             	"setoutdirforbuild": false,
-        	    "outdir" : "Release\\v120_xp\\Switch3264\\x64\\",
+        	    "outdir" : "Release\\v142\\Switch3264\\x64\\",
                 "platform":"x64"
             }
     ],
-    "archivingdir": "Release\\v120_xp\\Switch3264\\",
+    "archivingdir": "Release\\v142\\Switch3264\\",
     "archivedir": "C:/Linkout/",
-    "remotedir": "http://ambiesoft.fam.cx/ffdav/uploads/Switch3264/",
-    "remotesha1" : "http://ambiesoft.fam.cx/ffdav/uploads/getSha1.php?file=Switch3264/{}",
-    
-    "TotalFileCount": "exact",
+    "remotedir": "http://ambiesoft.mooo.com/ffdav/uploads/Switch3264/",
+    "remotesha1" : "http://ambiesoft.mooo.com/ffdav/uploads/getSha1.php?file=Switch3264/{}",
     
     "ShouldNotBeFiles": [
 		"Switch3264.ini"
@@ -29,13 +27,11 @@
     "ShouldBeFiles": [
 		"Switch3264.exe",
 		"Switch3264.pdb",
-		"msvcp120.dll",
-		"msvcr120.dll",
-		"vccorlib120.dll",
 		"History.txt",
 		"LICENSE",
 		"README.md"
     ],
+    "TotalFileCount": "exact",
     
     "ShouldBeOneOfThem": [],
     
